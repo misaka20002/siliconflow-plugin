@@ -581,7 +581,7 @@ export function supportGuoba() {
         {
           field: "botName",
           label: "BOT名称",
-          bottomHelpMessage: "设置BOT的名称，当消息中包含这个名称时会触发对话；留空则关闭；更改后重启生效",
+          bottomHelpMessage: "设置BOT的名称，当消息中包含这个名称时会触发对话；有多个名称的情况下使用 | 分隔；留空则关闭；更改后重启生效",
           component: "Input",
           componentProps: {
             placeholder: "小助手",
