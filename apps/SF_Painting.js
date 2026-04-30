@@ -1004,6 +1004,7 @@ export class SF_Painting extends plugin {
 
         // 获取接口配置
         let use_sf_key = "", apiBaseUrl = "", model = "", systemPrompt = "", useMarkdown = false, forwardMessage = true, quoteMessage = true, forwardThinking = false, enableImageUpload = true, mustNeedImgLength = 0, mustReturnImgRetriesTimes = 0, paintModel = false
+        let defaultImages = []
         let cdtime = 0, dailyLimit = 0, unlimitedUsers = [], onlyGroupID = [], memberConfigName = 'ss_default', groupContextLength = 0
 
         // 根据用户身份选择使用的接口索引
@@ -1033,6 +1034,7 @@ export class SF_Painting extends plugin {
             useMarkdown = (typeof apiConfig.useMarkdown !== 'undefined') ? apiConfig.useMarkdown : false
             forwardMessage = (typeof apiConfig.forwardMessage !== 'undefined') ? apiConfig.forwardMessage : false
             mustNeedImgLength = (typeof apiConfig.mustNeedImgLength !== 'undefined') ? apiConfig.mustNeedImgLength : 0
+            defaultImages = (Array.isArray(apiConfig.defaultImages) && apiConfig.defaultImages.length > 0) ? apiConfig.defaultImages : (config_date.ss_defaultImages || [])
             mustReturnImgRetriesTimes = (typeof apiConfig.mustReturnImgRetriesTimes !== 'undefined') ? apiConfig.mustReturnImgRetriesTimes : 0
             paintModel = (typeof apiConfig.paintModel !== 'undefined') ? apiConfig.paintModel : false
             groupContextLength = (typeof apiConfig.groupContextLength !== 'undefined') ? apiConfig.groupContextLength : 0
@@ -1059,6 +1061,7 @@ export class SF_Painting extends plugin {
             useMarkdown = config_date.ss_useMarkdown
             forwardMessage = config_date.ss_forwardMessage
             mustNeedImgLength = config_date.ss_mustNeedImgLength
+            defaultImages = config_date.ss_defaultImages || []
             mustReturnImgRetriesTimes = config_date.ss_mustReturnImgRetriesTimes
             groupContextLength = config_date.ss_groupContextLength
             quoteMessage = config_date.ss_quoteMessage
@@ -1076,6 +1079,7 @@ export class SF_Painting extends plugin {
             useMarkdown = config_date.ss_useMarkdown
             forwardMessage = config_date.ss_forwardMessage
             mustNeedImgLength = config_date.ss_mustNeedImgLength
+            defaultImages = config_date.ss_defaultImages || []
             mustReturnImgRetriesTimes = config_date.ss_mustReturnImgRetriesTimes
             groupContextLength = config_date.ss_groupContextLength
             quoteMessage = config_date.ss_quoteMessage
@@ -1122,6 +1126,30 @@ export class SF_Painting extends plugin {
 
         // 处理引用消息,获取图片和文本
         await parseSourceImg(e)
+
+        // 自动补充默认本地图片（仅在需要图片时与用户发送的图片合并）
+        if (mustNeedImgLength > 0 && defaultImages && defaultImages.length > 0) {
+            if (!e.img) e.img = [];
+            const extMimeMap = { '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png', '.gif': 'image/gif', '.webp': 'image/webp', '.bmp': 'image/bmp' };
+            for (const rawPath of defaultImages) {
+                try {
+                    const filePath = rawPath.trim().replace(/^["']|["']$/g, '').replace(/^file:\/\/\/?/, '').trim();
+                    if (!filePath) continue;
+                    if (!fs.existsSync(filePath)) {
+                        logger.warn(`[SF插件][ss]默认图片文件不存在: ${filePath}`);
+                        continue;
+                    }
+                    const ext = filePath.slice(filePath.lastIndexOf('.')).toLowerCase();
+                    const mimeType = extMimeMap[ext] || 'image/jpeg';
+                    const buffer = fs.readFileSync(filePath);
+                    e.img.push(`data:${mimeType};base64,${buffer.toString('base64')}`);
+                    logger.info(`[SF插件][ss]已加载默认图片: ${filePath}`);
+                } catch (err) {
+                    logger.error(`[SF插件][ss]读取默认图片失败: ${rawPath}`, err);
+                }
+            }
+        }
+
         if (mustNeedImgLength) {
             if (!(await getMediaFrom_awaitContext(e, this, mustNeedImgLength, memberConfigName)))
                 return true;

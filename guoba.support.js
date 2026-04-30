@@ -1055,6 +1055,18 @@ export function supportGuoba() {
                 },
               },
               {
+                field: "defaultImages",
+                label: "默认图片",
+                bottomHelpMessage: "设置此接口必需图片的默认本地图片路径，当需要图片时会自动读取这些本地图片与用户发送的图片合并（仅在必需图片数>0时生效）。Windows示例：D:\\xiazai\\image.jpg ；Linux示例：/home/user/images/ref.jpg ；支持带空格/引号的路径",
+                component: "GTags",
+                componentProps: {
+                  placeholder: '请输入本地图片绝对路径',
+                  allowAdd: true,
+                  allowDel: true,
+                  valueParser: ((value) => value.split(',').map(v => v.trim()).filter(v => v) || []),
+                },
+              },
+              {
                 field: "mustReturnImgRetriesTimes",
                 label: "必须返回图片",
                 bottomHelpMessage: "重试次数：该接口必须返回图片，若没有返回图片，则执行重试的次数。",
@@ -1242,6 +1254,18 @@ export function supportGuoba() {
           componentProps: {
             min: 0,
             step: 1,
+          },
+        },
+        {
+          field: "ss_defaultImages",
+          label: "[#ss]默认图片",
+          bottomHelpMessage: "设置必需图片的默认本地图片路径，当需要图片时会自动读取这些本地图片与用户发送的图片合并，无需每次手动发送固定参考图（仅在必需图片数>0时生效）。Windows示例：D:\\xiazai\\image.jpg ；Linux示例：/home/user/images/ref.jpg ；支持带空格/引号的路径",
+          component: "GTags",
+          componentProps: {
+            placeholder: '请输入本地图片绝对路径',
+            allowAdd: true,
+            allowDel: true,
+            valueParser: ((value) => value.split(',').map(v => v.trim()).filter(v => v) || []),
           },
         },
         {
