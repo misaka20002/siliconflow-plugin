@@ -8,7 +8,7 @@ import {
 } from '../utils/getImg.js'
 import { memberControlProcess } from '../utils/memberControl.js'
 import { applyPresets } from '../utils/applyPresets.js'
-import { handleParam } from '../utils/Jimeng/parse_Jimeng.js'
+import { handleParam } from '../utils/parse_Oai.js'
 import {
     getConversationId,
     saveConversationId,

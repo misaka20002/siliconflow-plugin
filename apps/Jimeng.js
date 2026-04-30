@@ -6,7 +6,7 @@ import {
     url2Base64,
     getMediaFrom_awaitContext,
 } from '../utils/getImg.js'
-import { handleParam } from '../utils/Jimeng/parse_Jimeng.js'
+import { handleParam } from '../utils/parse_Oai.js'
 import { memberControlProcess } from '../utils/memberControl.js'
 import { applyPresets } from '../utils/applyPresets.js'
 import axios from 'axios'

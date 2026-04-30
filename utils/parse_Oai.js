@@ -59,6 +59,20 @@ function stepsParam(text) {
     text = text.replace(/步数\s?\d+/g, '')
     return { parameters, text }
 }
+function isGeneratePrompt(text, e) {
+    // 确保text是字符串
+    if (!text || typeof text !== 'string') {
+        return { parameters: {}, text: text || '' };
+    }
+
+    let parameters = {}
+    let generatePrompt = text.match(/--自?动?提示词(开|关)/)?.[1]
+    if (generatePrompt && e?.sfRuntime) {
+        e.sfRuntime.isgeneratePrompt = generatePrompt === '开'
+    }
+    text = text.replace(/--自?动?提示词(开|关)/g, '')
+    return { parameters, text }
+}
 function video_durationParam(text) {
     const duration = {
         "--5秒": { video_duration: 5 },
@@ -193,6 +207,9 @@ export async function handleParam(e, text) {
     // result = callGetImgs(text)
     // parameters = Object.assign(parameters, result.parameters)
     // text = result.text
+    // 自动提示词处理
+    result = isGeneratePrompt(text, e)
+    text = result.text
     // 高级传参
     result = advancedParam(text)
     model = result.model

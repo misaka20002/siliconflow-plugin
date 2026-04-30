@@ -349,218 +349,62 @@ export function supportGuoba() {
             multiple: true,
             schemas: [
               {
+                field: "formatType",
+                label: "接口类型",
+                component: "Select",
+                required: true,
+                bottomHelpMessage: "选择请求体格式类型",
+                componentProps: {
+                  options: [
+                    { label: "魔搭modelscope", value: "modelscope" },
+                  ],
+                },
+              },
+              {
                 field: "baseUrl",
                 label: "接口地址",
                 component: "Input",
-                bottomHelpMessage: "设置接口地址，例如：https://api.openai.com/v1/images/generations，https://api.studio.nebius.com/v1/images/generations",
+                bottomHelpMessage: "设置接口地址，例如：https://api-inference.modelscope.cn/",
                 componentProps: {
-                  placeholder: 'https://api.openai.com/v1/images/generations',
+                  placeholder: 'https://api-inference.modelscope.cn/',
                 },
               },
               {
                 field: "apiKey",
                 label: "接口Key",
-                component: "Input",
-                bottomHelpMessage: "设置接口Key",
+                component: "InputPassword",
+                bottomHelpMessage: "设置接口Key，有多个key用英文逗号分割",
                 componentProps: {
                   placeholder: 'sk-xxxxxxxxxxxxxxxxxxxxxxxx',
                 },
               },
               {
-                field: "formatType",
-                label: "格式类型",
-                component: "Select",
-                bottomHelpMessage: "选择请求体格式类型，不同类型的接口有不同的请求格式",
+                field: "model",
+                label: "绘画模型",
+                component: "Input",
+                required: true,
+                bottomHelpMessage: "设置模型名称，例如：Qwen/Qwen-Image",
                 componentProps: {
-                  options: [
-                    { label: "OpenAI格式", value: "openai" },
-                    { label: "Nebius格式", value: "nebius" },
-                    { label: "魔塔modelscope", value: "modelscope" },
-                  ],
-                  defaultValue: "openai",
+                  placeholder: 'Qwen/Qwen-Image',
                 },
               },
               {
                 field: "enableImageUpload",
-                label: "图片上传功能",
+                label: "支持图生图",
                 component: "Switch",
-                bottomHelpMessage: "开启后支持上传图片给模型，关闭后将忽略消息中的图片",
-              },
-              {
-                field: "model",
-                label: "模型",
-                component: "Input",
-                bottomHelpMessage: "设置模型名称，例如：dall-e-3, black-forest-labs/flux-dev",
-                componentProps: {
-                  placeholder: 'dall-e-3',
-                  defaultValue: 'dall-e-3',
-                },
-              },
-              {
-                field: "width",
-                label: "图片宽度",
-                component: "InputNumber",
-                bottomHelpMessage: "设置图片宽度",
-                componentProps: {
-                  min: 256,
-                  max: 1792,
-                  step: 64,
-                  defaultValue: 1024,
-                },
-              },
-              {
-                field: "height",
-                label: "图片高度",
-                component: "InputNumber",
-                bottomHelpMessage: "设置图片高度",
-                componentProps: {
-                  min: 256,
-                  max: 1792,
-                  step: 64,
-                  defaultValue: 1024,
-                },
-              },
-              {
-                field: "n",
-                label: "生成数量",
-                component: "InputNumber",
-                bottomHelpMessage: "设置生成图片的数量（仅OpenAI格式使用，原生的dall-e-3（即官key）只支持生成数量为1，否则报错）",
-                componentProps: {
-                  min: 1,
-                  max: 10,
-                  step: 1,
-                  defaultValue: 1,
-                },
-              },
-              {
-                field: "num_inference_steps",
-                label: "推理步数",
-                component: "InputNumber",
-                bottomHelpMessage: "设置推理步数（仅Nebius等扩展格式使用，OpenAI格式不需要此参数）",
-                componentProps: {
-                  min: 1,
-                  max: 100,
-                  step: 1,
-                  defaultValue: 28,
-                },
-              },
-              {
-                field: "negative_prompt",
-                label: "负面提示词",
-                component: "InputTextArea",
-                bottomHelpMessage: "设置负面提示词（仅Nebius等扩展格式使用，OpenAI格式不需要此参数）",
-                componentProps: {
-                  defaultValue: "",
-                },
+                bottomHelpMessage: "开启后将支持上传引用的图片",
               },
               {
                 field: "enableGeneratePrompt",
                 label: "启用自动提示词",
                 component: "Switch",
                 bottomHelpMessage: "是否对该接口启用自动提示词功能（开启后将自动优化用户输入的提示词）",
-                componentProps: {
-                  defaultValue: true,
-                },
-              },
-              {
-                field: "response_format",
-                label: "响应格式",
-                component: "Input",
-                bottomHelpMessage: "设置响应格式，例如：b64_json, url（OpenAI和Nebius格式都可使用）",
-                componentProps: {
-                  placeholder: 'b64_json',
-                  defaultValue: 'b64_json',
-                },
-              },
-              {
-                field: "response_extension",
-                label: "响应扩展",
-                component: "Input",
-                bottomHelpMessage: "设置响应扩展格式，例如：webp, jpg（仅Nebius等扩展格式使用，OpenAI格式不需要此参数）",
-                componentProps: {
-                  placeholder: 'webp',
-                  defaultValue: 'webp',
-                },
-              },
-              {
-                field: "seed",
-                label: "随机种子",
-                component: "InputNumber",
-                bottomHelpMessage: "设置随机种子，-1表示随机（仅Nebius等扩展格式使用，OpenAI格式不需要此参数）",
-                componentProps: {
-                  min: -1,
-                  step: 1,
-                  defaultValue: -1,
-                },
               },
               {
                 field: "extraParams",
                 label: "额外参数",
                 component: "InputTextArea",
-                bottomHelpMessage: "设置额外参数，使用JSON格式，例如：{\"response_format\": \"b64_json\",\"response_extension\": \"webp\",\"num_inference_steps\": 28,\"negative_prompt\": \"\",\"seed\": -1}",
-              },
-              {
-                field: "requestTemplate",
-                label: "请求体模板",
-                component: "InputTextArea",
-                bottomHelpMessage: "设置完整的请求体模板，使用JSON格式。如果设置了此项，将优先使用此模板，忽略上面的参数设置。",
-              },
-              {
-                field: "useTemplateVariables",
-                label: "使用模板变量",
-                component: "Switch",
-                bottomHelpMessage: "开启后会替换模板中的变量，如{{prompt}}、{{width}}等。关闭后将直接使用模板，只替换prompt字段。",
-                componentProps: {
-                  defaultValue: false,
-                },
-              },
-              {
-                field: "authType",
-                label: "认证类型",
-                component: "Select",
-                bottomHelpMessage: "设置API请求的认证类型，影响Authorization请求头的格式",
-                componentProps: {
-                  options: [
-                    { label: "Bearer Token (默认)", value: "bearer" },
-                    { label: "Basic Auth", value: "basic" },
-                    { label: "API Key", value: "apikey" },
-                    { label: "自定义", value: "custom" },
-                  ],
-                  defaultValue: "bearer",
-                },
-              },
-              {
-                field: "authHeaderName",
-                label: "认证头名称",
-                component: "Input",
-                bottomHelpMessage: "设置认证头的名称，默认为'Authorization'",
-                componentProps: {
-                  placeholder: 'Authorization',
-                },
-              },
-              {
-                field: "customAuthValue",
-                label: "自定义认证值",
-                component: "Input",
-                bottomHelpMessage: "当认证类型为'自定义'时，设置完整的认证头值，将直接使用此值作为Authorization头的值",
-                componentProps: {
-                  placeholder: '例如：Bearer your-token-here',
-                },
-              },
-              {
-                field: "customHeaders",
-                label: "自定义请求头",
-                component: "InputTextArea",
-                bottomHelpMessage: "设置其他自定义请求头，使用JSON格式，例如：{\"x-api-version\": \"1.0\", \"custom-header\": \"value\"}",
-                componentProps: {
-                  placeholder: '{"x-api-version": "1.0"}',
-                },
-              },
-              {
-                field: "responseFormat",
-                label: "响应格式路径",
-                component: "Input",
-                bottomHelpMessage: "设置从响应中提取图片数据的路径，例如：images[0].url。如果不设置，将使用默认的解析逻辑。",
+                bottomHelpMessage: "设置额外参数，使用JSON格式，例如：{\"seed\": -1}",
               },
               {
                 field: "remark",
@@ -2505,7 +2349,7 @@ export function supportGuoba() {
         },
         {
           field: 'moscope_helper',
-          label: '魔塔绘画配置教程 🍇',
+          label: '魔搭绘画配置教程 🍇',
           component: 'Input',
           componentProps: {
             readonly: true,
