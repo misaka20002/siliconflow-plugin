@@ -20,7 +20,7 @@
 - 在`接口地址`填入 `https://api-inference.modelscope.cn/`
 - 在`接口Key`填入 [你获取的Key/访问令牌](https://modelscope.cn/my/myaccesstoken)
   - 注意要**实名认证**才能拥有每日免费2000次绘画使用的额度（但每个模型有独立的次数限制）
-- 在`绘画模型`中填入你在 [AICG专区](https://www.modelscope.cn/aigc/models) 中找到的喜欢的模型，点进去，来到例如 [/Qwen/Qwen-Image-Edit-2511](https://www.modelscope.cn/models/Qwen/Qwen-Image-Edit-2511) 的网站，然后复制粘贴 `模型名`
+- 在`绘画模型`中填入你在 [图生图](https://www.modelscope.cn/models?filter=inference_type&page=1&tabKey=task&tasks=image-to-image&type=multi-modal) 或 [文生图](https://www.modelscope.cn/models?filter=inference_type&page=1&tabKey=task&tasks=text-to-image-synthesis&type=multi-modal) 或 中找到的喜欢的模型，点进去例如 [/Qwen/Qwen-Image-Edit-2511](https://www.modelscope.cn/models/Qwen/Qwen-Image-Edit-2511) ，然后复制粘贴 `模型名`
 - 在 `文件名` 中填写你喜欢的文件名
 - 在 `自定义命令` 中填写你喜欢的自定义命令，例如 `qwenedit`
 - 结束！最后给Bot发送 `#dqwenedit 将女孩改成炫彩发型` 试试~

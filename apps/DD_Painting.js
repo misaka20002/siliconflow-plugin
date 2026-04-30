@@ -201,6 +201,27 @@ export class DD_Painting extends plugin {
                     baseUrl += '/';
                 }
                 requestUrl = `${baseUrl}v1/images/generations`;
+            } else if (formatType === 'nebius') {
+                const basePayload = {
+                    model: apiConfig.model || 'black-forest-labs/flux-dev',
+                    prompt: param.input || " ",
+                    response_format: apiConfig.response_format || 'b64_json',
+                    response_extension: apiConfig.response_extension || 'webp',
+                    width: param.parameters.width || 1024,
+                    height: param.parameters.height || 1024,
+                    num_inference_steps: param.parameters.steps || 28,
+                    negative_prompt: param.parameters.negative_prompt || '',
+                    seed: param.parameters.seed ?? -1,
+                };
+
+                // 插入 extraParams
+                payload = this.buildPayload_for_extraParams(basePayload, apiConfig, param);
+
+                let baseUrl = apiConfig.baseUrl;
+                if (!baseUrl.endsWith('/')) {
+                    baseUrl += '/';
+                }
+                requestUrl = `${baseUrl}v1/images/generations`;
             }
 
             // 获取随机API Key
@@ -314,6 +335,46 @@ export class DD_Painting extends plugin {
                     success: false,
                     error: 'ModelScope 任务超时，请稍后重试'
                 };
+            } else if (formatType === 'nebius') {
+                const response = await fetch(requestUrl, {
+                    method: 'POST',
+                    headers: headers,
+                    body: JSON.stringify(payload, null, 2)
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    logger.error(`Nebius API请求失败: ${response.status}`, errorText);
+                    return {
+                        success: false,
+                        error: `Nebius API响应错误 ${response.status}: ${errorText}`
+                    };
+                }
+
+                const data = await response.json();
+
+                let imageUrl;
+                if (data.data && Array.isArray(data.data) && data.data.length > 0) {
+                    if (data.data[0].b64_json) {
+                        imageUrl = `base64://${data.data[0].b64_json}`;
+                    } else if (data.data[0].url) {
+                        imageUrl = data.data[0].url;
+                    }
+                }
+
+                if (imageUrl) {
+                    return {
+                        success: true,
+                        imageData: imageUrl,
+                        revised_prompt: param.input,
+                        payload: payload
+                    };
+                } else {
+                    return {
+                        success: false,
+                        error: 'Nebius API响应格式未知或未返回图片数据'
+                    };
+                }
             }
 
             return {
@@ -391,17 +452,23 @@ export class DD_Painting extends plugin {
     }
 
     async txt2img_generatePrompt(e, userPrompt, config_date) {
-        // 检查当前使用的接口是否设置了自动提示词开关
-        if (e.currentApiConfig && e.currentApiConfig.enableGeneratePrompt === true) {
+        // 确定是否需要自动提示词
+        let shouldGenerate = false;
+        if (e.sfRuntime && e.sfRuntime.isgeneratePrompt !== undefined) {
+            shouldGenerate = e.sfRuntime.isgeneratePrompt;
+        } else if (e.currentApiConfig && e.currentApiConfig.enableGeneratePrompt === true) {
+            shouldGenerate = true;
+            if (e.sfRuntime) e.sfRuntime.isgeneratePrompt = true;
+        }
+
+        if (shouldGenerate) {
             const m = await import('./SF_Painting.js');
             const sf = new m.SF_Painting();
 
-            // 调用原方法生成提示词
-            e.sfRuntime.isgeneratePrompt = e.currentApiConfig.enableGeneratePrompt;
             const result = await sf.txt2img_generatePrompt(e, userPrompt, config_date);
             return result;
-        }
-        return userPrompt;
+        } else
+            return userPrompt;
     }
 
     /**
@@ -501,7 +568,7 @@ export class DD_Painting extends plugin {
                             user_id: e.bot?.uin || e.self_id
                         },
                         {
-                            message: `✅ 绘画生成成功\n\n原始提示词: ${prompt}\n最终提示词: ${param.input}\n\n使用接口: ${apiConfig.remark || `接口${apiIndex}`}\n\n【参数详情】\n${paramText}${e.sfRuntime.isgeneratePrompt === undefined ? "\n\ntags的额外触发词：\n 自动提示词[开|关]" : ""}`,
+                            message: `✅ 绘画生成成功\n\n原始提示词: ${prompt}\n最终提示词: ${param.input}\n\n使用接口: ${apiConfig.remark || `接口${apiIndex}`}\n\n【参数详情】\n${paramText}${e.sfRuntime.isgeneratePrompt === undefined ? "\n\ntags的额外触发词：\n --自动提示词[开|关]" : ""}`,
                             nickname: e.bot?.nickname || 'DD绘画',
                             user_id: e.bot?.uin || e.self_id
                         }
@@ -510,12 +577,12 @@ export class DD_Painting extends plugin {
                 }
                 else {
                     await e.reply(segment.image(result.imageData))
-                    const msgx = await common.makeForwardMsg(e, [`✅ 绘画生成成功`, `原始提示词: ${prompt}\n最终提示词: ${param.input}`, `使用接口: ${apiConfig.remark || `接口${apiIndex}`}`, `【参数详情】\n${paramText}`, `${e.sfRuntime.isgeneratePrompt === undefined ? "tags的额外触发词：\n 自动提示词[开|关]" : ""}`])
+                    const msgx = await common.makeForwardMsg(e, [`✅ 绘画生成成功`, `原始提示词: ${prompt}\n最终提示词: ${param.input}`, `使用接口: ${apiConfig.remark || `接口${apiIndex}`}`, `【参数详情】\n${paramText}`, `${e.sfRuntime.isgeneratePrompt === undefined ? "tags的额外触发词：\n --自动提示词[开|关]" : ""}`])
                     await e.reply(msgx)
                 }
             } else {
                 await e.reply(segment.image(result.imageData))
-                await e.reply(`✅ 绘画生成成功\n\n原始提示词: ${prompt}\n最终提示词: ${param.input}\n\n使用接口: ${apiConfig.remark || `接口${apiIndex}`}\n\n【参数详情】\n${paramText}${e.sfRuntime.isgeneratePrompt === undefined ? "\n\ntags的额外触发词：\n 自动提示词[开|关]" : ""}`)
+                await e.reply(`✅ 绘画生成成功\n\n原始提示词: ${prompt}\n最终提示词: ${param.input}\n\n使用接口: ${apiConfig.remark || `接口${apiIndex}`}\n\n【参数详情】\n${paramText}${e.sfRuntime.isgeneratePrompt === undefined ? "\n\ntags的额外触发词：\n --自动提示词[开|关]" : ""}`)
             }
 
             return true

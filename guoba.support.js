@@ -357,6 +357,7 @@ export function supportGuoba() {
                 componentProps: {
                   options: [
                     { label: "魔搭modelscope", value: "modelscope" },
+                    { label: "Nebius", value: "nebius" },
                   ],
                 },
               },
