@@ -350,24 +350,14 @@ export function supportGuoba() {
             schemas: [
               {
                 field: "formatType",
-                label: "接口类型",
+                label: "接口",
                 component: "Select",
                 required: true,
-                bottomHelpMessage: "选择请求体格式类型",
                 componentProps: {
                   options: [
                     { label: "魔搭modelscope", value: "modelscope" },
                     { label: "Nebius", value: "nebius" },
                   ],
-                },
-              },
-              {
-                field: "baseUrl",
-                label: "接口地址",
-                component: "Input",
-                bottomHelpMessage: "设置接口地址，例如：https://api-inference.modelscope.cn/",
-                componentProps: {
-                  placeholder: 'https://api-inference.modelscope.cn/',
                 },
               },
               {

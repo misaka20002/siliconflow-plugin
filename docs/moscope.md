@@ -12,12 +12,10 @@
 
 # 配置教程
 
-> 只需填写 5 个参数即可使用啦>_<
-
 <img width="549" height="795" alt="image" src="https://github.com/user-attachments/assets/843a4565-cd45-4196-9ec2-ccb521d7e34a" />
 
 - 进入 [锅巴插件](https://github.com/guoba-yunzai/guoba-plugin)-sf插件配置-绘画功能(标签页)-DD 绘图插件配置-DD接口列表 中新增一个接口
-- 在`接口地址`填入 `https://api-inference.modelscope.cn/`
+- ~~在`接口地址`填入 `https://api-inference.modelscope.cn/`~~ （`接口地址` 已经内置，不需要填写）
 - 在`接口Key`填入 [你获取的Key/访问令牌](https://modelscope.cn/my/myaccesstoken)
   - 注意要**实名认证**才能拥有每日免费2000次绘画使用的额度（但每个模型有独立的次数限制）
 - 在`绘画模型`中填入你在 [图生图](https://www.modelscope.cn/models?filter=inference_type&page=1&tabKey=task&tasks=image-to-image&type=multi-modal) 或 [文生图](https://www.modelscope.cn/models?filter=inference_type&page=1&tabKey=task&tasks=text-to-image-synthesis&type=multi-modal) 或 中找到的喜欢的模型，点进去例如 [/Qwen/Qwen-Image-Edit-2511](https://www.modelscope.cn/models/Qwen/Qwen-Image-Edit-2511) ，然后复制粘贴 `模型名`

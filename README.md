@@ -5,16 +5,13 @@
 <img decoding="async" align=right src="resources/readme/girl.png" width="35%">
 
 - 一个适用于 [Yunzai 系列机器人框架](https://github.com/yhArcadia/Yunzai-Bot-plugins-index) 多功能AI集成插件，支持多种AI服务和模型：
-  - 🎨 AI绘图：支持SiliconFlow、Midjourney等多个绘图模型，支持文生图和图生图
-  - 🤖 智能对话：集成多种对话模型，支持历史记录、用户昵称获取、预设列表快速切换，预设拥有独立上下文，结合Markdown图片输出以获得沉浸式角色扮演体验
+  - 🎨 AI绘图：接入 SiliconFlow（硅基流动）、Midjourney、modelscope（魔搭社区）、Jimeng-Api（即梦） 等平台，免费图片视频生成。[点我跳转到使用教程](#使用教程)
+  - 🤖 AI对话：接入 OpenAI, Gemini 接口，支持多key负载均衡、预设列表快速切换，预设拥有独立上下文，结合Markdown图片输出以获得沉浸式角色扮演体验 或 作为Skill工作
+  - 🌡️ 暖群功能：群自动Gemini打招呼、群自动偷取发送表情包、复读 & 打断等功能
   - 🔍 实时搜索：通过#gg命令实现智能搜索和信息聚合
   - 🗣️ 语音合成：集成Fishaudio的高质量TTS服务
-  - 📊 资源管理：支持多key负载均衡，提供图片直链获取等功能
-  - 🔗 链接处理：自动提取和处理消息中的URL
   - 📱 视频解析：支持抖音、快手、哔哩哔哩视频解析
-  - 🌡️ 暖群功能：群自动Gemini打招呼、群自动偷取发送表情包、复读 & 打断等功能
   - ⚡ WebSocket：支持WebSocket与前端通信实现实时对话与绘图，详情看[前端地址](https://sf.maliy.top)，[部署教程](https://github.com/AIGC-Yunzai/SF-WEB)
-  - 📀 Jimeng-Api接口：支持调用即梦Api免费文生图、图生图、视频生成等
 
 
 ## 安装插件
@@ -47,10 +44,8 @@ pnpm install --filter=siliconflow-plugin
 - `抖音解析` `快手解析` 功能将调用 Python 对 抖音、快手进行解析
 
 ```sh
-# Ubuntu 中安装 Python 的方法
-sudo apt update
-sudo apt install python3  # 安装最新 Python 3
-sudo apt install python3-venv python3-pip  # 安装虚拟环境和 pip
+# Ubuntu 中安装 Python3
+sudo apt install python3 python3-venv python3-pip
 # 安装依赖（依赖约5MB）
 pip install aiohttp requests
 ```
@@ -60,22 +55,23 @@ pip install aiohttp requests
 > [!WARNING]
 > 非常不建议手动修改配置文件，本插件已兼容 [Guoba-plugin](https://github.com/guoba-yunzai/guoba-plugin) ，请使用锅巴插件对配置项进行修改
 
-## 功能列表
+## 指令列表
 
 <img decoding="async" align=right src="https://github.com/user-attachments/assets/9698e837-49e7-4c19-8dab-6aa17d1faed4" width="35%">
 
 请使用 `#sf帮助` 获取完整帮助
-- [x] `#sf绘画[tags][引用图片]` 使用sf接口绘画
-- [x] `#mjp[tags]` 使用MJ接口绘画
+- [x] `#sf绘画[tags][引用图片]` 使用SiliconFlow接口绘画
+- [x] `#mjp[tags]` 使用Midjourney接口绘画
+- [x] `#dd[tags][引用图片]` 使用modelscope接口绘画
+- [x] `#即梦绘画` `#即梦视频` 使用Jimeng-Api接口绘画、视频生成
 - [x] `#gg[gemini提问/实时搜索]`
 - [x] `#ss[自定义gpt-api接口提问]`
 - [x] 自动 Fishaudio 语音合成
-- [x] `#直链[引用图片]` 图片直链获取
+- [x] `#直链[引用图片]` 图片上传公开接口获取直链
 - [X] 支持接口列表，方便快速切换预设，预设具有独立的上下文
   - 例如自定义一个生成图片prompt的命令 `#gtag 一个美丽的女孩`
 - [X] 自动抖音/快手/b站视频解析
 - [X] 群自动Gemini打招呼、群自动偷取发送表情包、复读 & 打断
-- [ ] LLM接入MCP
 - [ ] TODO..
 
 ## 使用教程

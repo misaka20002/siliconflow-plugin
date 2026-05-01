@@ -181,6 +181,7 @@ export class DD_Painting extends plugin {
 
             const formatType = apiConfig.formatType;
             if (formatType === 'modelscope') {
+                requestUrl = `https://api-inference.modelscope.cn/v1/images/generations`;
                 const basePayload = {
                     model: apiConfig.model,
                     prompt: param.input || " ",
@@ -194,14 +195,8 @@ export class DD_Painting extends plugin {
 
                 // 插入 extraParams
                 payload = this.buildPayload_for_extraParams(basePayload, apiConfig, param);
-
-                let baseUrl = apiConfig.baseUrl;
-                // 确保baseUrl以/结尾
-                if (!baseUrl.endsWith('/')) {
-                    baseUrl += '/';
-                }
-                requestUrl = `${baseUrl}v1/images/generations`;
             } else if (formatType === 'nebius') {
+                requestUrl = `https://api.studio.nebius.com/v1/images/generations`;
                 const basePayload = {
                     model: apiConfig.model || 'black-forest-labs/flux-dev',
                     prompt: param.input || " ",
@@ -216,12 +211,6 @@ export class DD_Painting extends plugin {
 
                 // 插入 extraParams
                 payload = this.buildPayload_for_extraParams(basePayload, apiConfig, param);
-
-                let baseUrl = apiConfig.baseUrl;
-                if (!baseUrl.endsWith('/')) {
-                    baseUrl += '/';
-                }
-                requestUrl = `${baseUrl}v1/images/generations`;
             }
 
             // 获取随机API Key
@@ -267,12 +256,7 @@ export class DD_Painting extends plugin {
                 logger.info(`ModelScope 任务已提交，task_id: ${taskId}`);
 
                 // 第二步：轮询任务状态
-                let baseUrl = apiConfig.baseUrl;
-                // 确保baseUrl以/结尾
-                if (!baseUrl.endsWith('/')) {
-                    baseUrl += '/';
-                }
-                const taskCheckUrl = `${baseUrl}v1/tasks/${taskId}`;
+                const taskCheckUrl = `https://api-inference.modelscope.cn/v1/tasks/${taskId}`;
                 const taskHeaders = {
                     ...headers,
                     'X-ModelScope-Task-Type': 'image_generation'
@@ -684,7 +668,7 @@ export class DD_Painting extends plugin {
             const isUsing = currentApi === originalIndex;
             const remark = api.remark ? ` - ${api.remark}` : '';
             const modelInfo = api.model ? ` [${api.model}]` : '';
-            const formatInfo = api.formatType ? ` (${api.formatType === 'modelscope' ? '魔搭格式' : api.formatType})` : '';
+            const formatInfo = api.formatType ? ` (${api.formatType === 'modelscope' ? '魔搭' : api.formatType})` : '';
             const customCmd = api.customCommand ? ` (#d${api.customCommand})` : '';
             msg.push(`${originalIndex}. 接口${originalIndex}${remark}${modelInfo}${formatInfo}${customCmd}${isUsing ? ' [当前使用]' : ''}`);
         })
