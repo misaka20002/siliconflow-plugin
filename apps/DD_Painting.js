@@ -189,25 +189,27 @@ export class DD_Painting extends plugin {
                     negative_prompt: param.parameters.negative_prompt || undefined,
                     steps: param.parameters.steps || undefined,
                     guidance: param.parameters.guidance || undefined,
-                    image_url: `data:image/png;base64,${param.souce_image_base64}` || undefined,
+                    image_url: param.souce_image_base64 ? `data:image/png;base64,${param.souce_image_base64}` : undefined,
                     loras: param.parameters.loras || undefined,
                 };
+                Object.keys(basePayload).forEach(key => basePayload[key] === undefined && delete basePayload[key]);
 
                 // 插入 extraParams
                 payload = this.buildPayload_for_extraParams(basePayload, apiConfig, param);
             } else if (formatType === 'nebius') {
                 requestUrl = `https://api.studio.nebius.com/v1/images/generations`;
                 const basePayload = {
-                    model: apiConfig.model || 'black-forest-labs/flux-dev',
+                    model: apiConfig.model,
                     prompt: param.input || " ",
                     response_format: apiConfig.response_format || 'b64_json',
                     response_extension: apiConfig.response_extension || 'webp',
                     width: param.parameters.width || 1024,
                     height: param.parameters.height || 1024,
                     num_inference_steps: param.parameters.steps || 28,
-                    negative_prompt: param.parameters.negative_prompt || '',
+                    negative_prompt: param.parameters.negative_prompt || undefined,
                     seed: param.parameters.seed ?? -1,
                 };
+                Object.keys(basePayload).forEach(key => basePayload[key] === undefined && delete basePayload[key]);
 
                 // 插入 extraParams
                 payload = this.buildPayload_for_extraParams(basePayload, apiConfig, param);
