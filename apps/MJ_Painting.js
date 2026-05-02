@@ -92,7 +92,7 @@ export class MJ_Painting extends plugin {
 
     async mj_draw(e) {
         // 读取配置
-        let config_date = Config.getConfig()
+        const config_date = Config.getConfig()
         if (!config_date.mj_apiKey || !config_date.mj_apiBaseUrl) {
             const errorMsg = '请先设置API Key和API Base URL。使用命令：\n#mjp设置apikey [值]\n#mjp设置apibaseurl [值]\n（仅限主人设置）';
             if (e.ws) {
@@ -157,7 +157,8 @@ export class MJ_Painting extends plugin {
 
         result_member.record();
 
-        e.reply('正在生成图片，请稍候...', true, { recallMsg: 60 })
+        if (config_date.replyStartMsg)
+            e.reply('正在生成图片，请稍候...', true, { recallMsg: 60 })
         this.mj_send_pic(e, prompt, botType, config_date, base64Array)
         return true;
     }
@@ -295,7 +296,8 @@ export class MJ_Painting extends plugin {
             if (e.ws) {
                 this.sendMessage(e.ws, 'mj', '正在处理，请稍候...');
             } else {
-                await e.reply('正在处理，请稍候...', true, { recallMsg: 60 });
+                if (config_date.replyStartMsg)
+                    e.reply('正在处理，请稍候...', true, { recallMsg: 60 });
             }
 
             try {
@@ -362,8 +364,21 @@ export class MJ_Painting extends plugin {
                         // 限制历史记录长度为50条对话(100条消息)
                         redis.lTrim(historyKey, 0, 99);
                     } else {
-                        await e.reply(replyMsg, true);
-                        await e.reply({ ...segment.image(result.imageUrl), origin: true });
+                        if (config_date.simpleMode) {
+                            const forwardMsgs = [
+                                replyMsg,
+                                { ...segment.image(result.imageUrl), origin: true }
+                            ];
+                            const msgx = await common.makeForwardMsg(
+                                e,
+                                forwardMsgs,
+                                `${e.sender?.card || e.sender?.nickname || 'User'} 的MJ绘画`
+                            );
+                            await e.reply(msgx);
+                        } else {
+                            await e.reply(replyMsg, true);
+                            await e.reply({ ...segment.image(result.imageUrl), origin: true }, config_date.sendImgQuote_Message);
+                        }
                     }
 
                     redis.set(`sf_plugin:MJ_Painting:lastTaskId:${e.user_id}`, newTaskId, { EX: 7 * 24 * 60 * 60 }); // 写入redis，有效期7天
@@ -468,14 +483,16 @@ MJP插件帮助：
 
     async mj_send_pic(e, prompt, botType, config_date, base64Array) {
         try {
+            let translatedMsg = '';
             if (config_date.mj_translationEnabled && config_date.mj_translationKey && config_date.mj_translationBaseUrl) {
                 const translatedPrompt = await this.translatePrompt(prompt, config_date)
                 if (translatedPrompt) {
                     prompt = translatedPrompt
+                    translatedMsg = `翻译后的提示词：${prompt}`;
                     if (e.ws) {
-                        this.sendMessage(e.ws, 'mj', `翻译后的提示词：${prompt}`);
-                    } else {
-                        await e.reply(`翻译后的提示词：${prompt}`, true);
+                        this.sendMessage(e.ws, 'mj', translatedMsg);
+                    } else if (!config_date.simpleMode) {
+                        e.reply(translatedMsg, true);
                     }
                 }
             }
@@ -523,8 +540,22 @@ MJP插件帮助：
                     redis.lTrim(historyKey, 0, 99);
                 } else {
                     // 普通聊天
-                    await e.reply(replyMsg, true);
-                    e.reply({ ...segment.image(result.imageUrl), origin: true });
+                    if (config_date.simpleMode) {
+                        const forwardMsgs = [];
+                        if (translatedMsg) forwardMsgs.push(translatedMsg);
+                        forwardMsgs.push(replyMsg);
+                        forwardMsgs.push({ ...segment.image(result.imageUrl), origin: true });
+
+                        const msgx = await common.makeForwardMsg(
+                            e,
+                            forwardMsgs,
+                            `${e.sender?.card || e.sender?.nickname || 'User'} 的MJ绘画`
+                        );
+                        await e.reply(msgx);
+                    } else {
+                        await e.reply(replyMsg, true);
+                        await e.reply({ ...segment.image(result.imageUrl), origin: true }, config_date.sendImgQuote_Message);
+                    }
                 }
 
                 redis.set(`sf_plugin:MJ_Painting:lastTaskId:${e.user_id}`, taskId, { EX: 7 * 24 * 60 * 60 }); // 写入redis，有效期7天
@@ -658,7 +689,7 @@ MJP插件帮助：
     }
 
     async mj_draw_with_link(e) {
-        let config_date = Config.getConfig()
+        const config_date = Config.getConfig()
         if (!config_date.mj_apiKey || !config_date.mj_apiBaseUrl) {
             await e.reply('请先设置API Key和API Base URL。使用命令：\n#mjp设置apikey [值]\n#mjp设置apibaseurl [值]\n（仅限主人设置）', true)
             return
@@ -721,7 +752,8 @@ MJP插件帮助：
             prompt = `${prompt} ${isNiji ? `--niji 6 --cref ${uploadedUrl}` : `--oref ${uploadedUrl}`}`;
             logger.info(`[MJ_Painting] Final prompt: ${prompt}`)
 
-            await e.reply('正在生成图片，请稍候...', true, { recallMsg: 60 })
+            if (config_date.replyStartMsg)
+                await e.reply('正在生成图片，请稍候...', true, { recallMsg: 60 })
             const botType = isNiji ? 'NIJI_JOURNEY' : 'MID_JOURNEY'
             await this.mj_send_pic(e, prompt, botType, config_date, [])
             return true

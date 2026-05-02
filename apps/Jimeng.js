@@ -261,7 +261,7 @@ ntags = [tags]`,
 
             if (config_data.replyStartMsg)
                 e.reply("人家开始生成啦，请等待1-10分钟", true, { recallMsg: 60 });
-            
+
             logger.info(`[sf插件][Jimeng] 开始执行:\n` + JSON.stringify(requestBody))
 
             result_member.record();
@@ -392,10 +392,7 @@ ${data.created ? `创建时间：${new Date(data.created * 1000).toLocaleString(
 
                     // 发送所有生成的图片
                     for (const url of imageUrls) {
-                        await e.reply({
-                            ...segment.image(url),
-                            origin: true
-                        })
+                        await e.reply({ ...segment.image(url), origin: true }, config_data.sendImgQuote_Message)
                     }
                 }
 

@@ -549,9 +549,9 @@ export class DD_Painting extends plugin {
             // 发送合并转发消息
             let msgList = [];
             if (config_date.simpleMode) {
-                msgList.push(segment.image(result.imageData));
+                msgList.push({ ...segment.image(result.imageData), origin: true });
             } else {
-                e.reply(segment.image(result.imageData));
+                e.reply({ ...segment.image(result.imageData), origin: true }, config_date.sendImgQuote_Message)
             }
 
             msgList.push(`使用接口: ${apiConfig.remark || `接口${apiIndex}`}`);

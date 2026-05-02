@@ -705,7 +705,13 @@ export function supportGuoba() {
         {
           field: "replyStartMsg",
           label: "绘画回复确认",
-          bottomHelpMessage: "开启后将回复任务启动",
+          bottomHelpMessage: "开启后将回复任务启动消息",
+          component: "Switch",
+        },
+        {
+          field: "sendImgQuote_Message",
+          label: "图片引用原消息",
+          bottomHelpMessage: "开启后回复图片时会引用原消息",
           component: "Switch",
         },
         {
