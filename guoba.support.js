@@ -703,9 +703,15 @@ export function supportGuoba() {
           },
         },
         {
+          field: "replyStartMsg",
+          label: "绘画回复确认",
+          bottomHelpMessage: "开启后将回复任务启动",
+          component: "Switch",
+        },
+        {
           field: "simpleMode",
           label: "绘画简洁模式",
-          bottomHelpMessage: "开启后合并输出图片与prompt，且不提示进入绘画队列",
+          bottomHelpMessage: "开启后合并输出图片与prompt",
           component: "Switch",
         },
         {

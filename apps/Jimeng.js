@@ -259,8 +259,9 @@ ntags = [tags]`,
 
             logger.info(`[sf插件][Jimeng] 使用账号: [${usedAccount.index}] ${usedAccount.type}`);
 
-            // if (!config_date.simpleMode)
-            e.reply("人家开始生成啦，请等待1-10分钟", true, { recallMsg: 60 });
+            if (config_data.replyStartMsg)
+                e.reply("人家开始生成啦，请等待1-10分钟", true, { recallMsg: 60 });
+            
             logger.info(`[sf插件][Jimeng] 开始执行:\n` + JSON.stringify(requestBody))
 
             result_member.record();

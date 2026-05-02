@@ -527,6 +527,9 @@ export class DD_Painting extends plugin {
 
         result_member.record();
 
+        if (config_date.replyStartMsg)
+            e.reply("人家开始生成啦，请等待1-10分钟", true, { recallMsg: 60 });
+
         param.input = await this.txt2img_generatePrompt(e, param.input, config_date);
 
         logger.info("[sf插件][dd]开始图片生成API调用")
@@ -544,37 +547,29 @@ export class DD_Painting extends plugin {
             const paramText = this.formatPayloadToText(result.payload);
 
             // 发送合并转发消息
-            if (e.group_id) {
-                if (config_date.simpleMode) {
-                    // 构造转发消息
-                    const forwardMsg = [
-                        {
-                            message: segment.image(result.imageData),
-                            nickname: e.bot?.nickname || 'DD绘画',
-                            user_id: e.bot?.uin || e.self_id
-                        },
-                        {
-                            message: `✅ 绘画生成成功\n\n原始提示词: ${prompt}\n最终提示词: ${param.input}\n\n使用接口: ${apiConfig.remark || `接口${apiIndex}`}\n\n【参数详情】\n${paramText}${e.sfRuntime.isgeneratePrompt === undefined ? "\n\ntags的额外触发词：\n --自动提示词[开|关]" : ""}`,
-                            nickname: e.bot?.nickname || 'DD绘画',
-                            user_id: e.bot?.uin || e.self_id
-                        }
-                    ]
-                    await e.reply(await e.group.makeForwardMsg(forwardMsg))
-                }
-                else {
-                    await e.reply(segment.image(result.imageData))
-                    const msgx = await common.makeForwardMsg(e, [`✅ 绘画生成成功`, `原始提示词: ${prompt}\n最终提示词: ${param.input}`, `使用接口: ${apiConfig.remark || `接口${apiIndex}`}`, `【参数详情】\n${paramText}`, `${e.sfRuntime.isgeneratePrompt === undefined ? "tags的额外触发词：\n --自动提示词[开|关]" : ""}`])
-                    await e.reply(msgx)
-                }
+            let msgList = [];
+            if (config_date.simpleMode) {
+                msgList.push(segment.image(result.imageData));
             } else {
-                await e.reply(segment.image(result.imageData))
-                await e.reply(`✅ 绘画生成成功\n\n原始提示词: ${prompt}\n最终提示词: ${param.input}\n\n使用接口: ${apiConfig.remark || `接口${apiIndex}`}\n\n【参数详情】\n${paramText}${e.sfRuntime.isgeneratePrompt === undefined ? "\n\ntags的额外触发词：\n --自动提示词[开|关]" : ""}`)
+                e.reply(segment.image(result.imageData));
             }
+
+            msgList.push(`使用接口: ${apiConfig.remark || `接口${apiIndex}`}`);
+            msgList.push(`原始提示词: ${prompt}`);
+            msgList.push(`【参数详情】`);
+            if (paramText) {
+                msgList = msgList.concat(paramText.split('\n'));
+            }
+            if (e.sfRuntime.isgeneratePrompt === undefined) {
+                msgList.push("tags的额外触发词：\n --自动提示词[开|关]");
+            }
+
+            e.reply(await common.makeForwardMsg(e, msgList, '绘画生成成功'));
 
             return true
         } catch (error) {
             logger.error('生成绘画时发生错误:', error)
-            await e.reply(`绘画生成失败: ${hidePrivacyInfo(error.message) || '未知错误'}`)
+            e.reply(`绘画生成失败: ${hidePrivacyInfo(error.message) || '未知错误'}`)
             return false
         }
     }
