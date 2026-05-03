@@ -35,7 +35,7 @@ export function applyPresets(text, config, e = {}) {
         .map(p => ({
             name: p.name.trim(),
             prompt: p.prompt.trim(),
-            regex: new RegExp(escapeRegExp(p.name.trim()), 'gi')
+            regex: new RegExp(`\\{预设:${escapeRegExp(p.name.trim())}\\}`, 'gi')
         }))
         .sort((a, b) => b.name.length - a.name.length)
 

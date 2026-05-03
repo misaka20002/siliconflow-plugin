@@ -691,7 +691,7 @@ export function supportGuoba() {
                 label: "预设名",
                 component: "Input",
                 required: true,
-                bottomHelpMessage: "将绘画输入文本中的 预设名 替换为 预设文本",
+                bottomHelpMessage: "预设触发词为: {预设:'预设名'} ；可用指令：#sf预设列表 #sf预设[添加|删除|查看]",
               },
               {
                 field: "prompt",
