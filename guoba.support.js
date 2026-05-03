@@ -763,12 +763,12 @@ export function supportGuoba() {
         {
           field: "defaultCommand",
           label: "默认命令",
-          bottomHelpMessage: "当触发BOT名字时使用的默认命令，可选：ss 或 gg",
+          bottomHelpMessage: "当触发BOT名字时使用的默认接口",
           component: "Select",
           componentProps: {
             options: [
-              { label: "使用#ss命令", value: "ss" },
-              { label: "使用#gg命令", value: "gg" },
+              { label: "使用 OpenAI API 默认接口", value: "ss" },
+              { label: "使用 Gemini 默认接口", value: "gg" },
             ],
           },
         },
@@ -809,7 +809,7 @@ export function supportGuoba() {
         },
         {
           component: "Divider",
-          label: " 模型提供商-OpenAi [#ss]指令",
+          label: " 模型提供商-OpenAI API",
           componentProps: {
             orientation: "left",
             plain: true,
@@ -817,8 +817,8 @@ export function supportGuoba() {
         },
         {
           field: "ss_APIList",
-          label: "[#ss]接口列表",
-          bottomHelpMessage: "设置#ss[对话]的API接口列表，可添加多个接口配置，填写了的部分会覆盖默认配置，不填则使用默认配置，默认配置是指[#ss]对话接口地址等，每个接口是独立的上下文，只有#ss和#gg的默认配置是共享的上下文",
+          label: "接口列表",
+          bottomHelpMessage: "设置 OpenAI API 格式的接口列表，可添加多个接口配置",
           component: "GSubForm",
           componentProps: {
             multiple: true,
@@ -1016,8 +1016,8 @@ export function supportGuoba() {
         },
         {
           field: 'ss_usingAPI',
-          label: '[#ss]主人使用接口',
-          bottomHelpMessage: "选择 [#ss]指令/主人/BOT名称触发时要使用的接口配置；其他用户可使用指令：#sfss接口列表 #sfss使用接口[数字]",
+          label: '默认使用接口',
+          bottomHelpMessage: "选择 [#ss]指令/主人/BOT名称触发时要使用的接口配置；可用指令：#sfss接口列表 #sfss使用接口[数字]",
           component: 'Select',
           componentProps: {
             options: (Config.getConfig()?.ss_APIList || []).map((item, index) => {
@@ -1140,7 +1140,7 @@ export function supportGuoba() {
         // },
         {
           component: "Divider",
-          label: " 模型提供商-Gemini [#gg]指令",
+          label: " 模型提供商-Gemini",
           componentProps: {
             orientation: "left",
             plain: true,
@@ -1148,8 +1148,8 @@ export function supportGuoba() {
         },
         {
           field: "gg_APIList",
-          label: "[#gg]接口列表",
-          bottomHelpMessage: "设置#gg[对话]的API接口列表，可添加多个接口配置，填写了的部分会覆盖默认配置，不填则使用默认配置，默认配置是指[#gg]Gemini反代地址等，每个接口是独立的上下文，只有#ss和#gg的默认配置是共享的上下文",
+          label: "接口列表",
+          bottomHelpMessage: "设置 Gemini 格式的接口列表，可添加多个接口配置",
           component: "GSubForm",
           componentProps: {
             multiple: true,
@@ -1353,7 +1353,7 @@ export function supportGuoba() {
         },
         {
           field: 'gg_usingAPI',
-          label: '[#gg]主人使用接口',
+          label: '默认使用接口',
           bottomHelpMessage: "选择 [#gg]指令/主人/BOT名称触发时要使用的接口配置；其他用户可使用指令：#sfgg接口列表 #sfgg使用接口[数字]",
           component: 'Select',
           componentProps: {
@@ -1492,13 +1492,13 @@ export function supportGuoba() {
         {
           field: "gg_ss_useContext",
           label: "上下文功能",
-          bottomHelpMessage: "[#ss][#gg]共用，开启后将保留对话历史记录，上下文#gg与#ss的上下文共享",
+          bottomHelpMessage: "使用 OpenAI API 与 Gemini 默认指令 [#ss][#gg] 时，开启后将保留对话历史记录；[#gg][#ss]的共享上下文",
           component: "Switch",
         },
         {
           field: "gg_maxHistoryLength",
           label: "历史记录条数",
-          bottomHelpMessage: "[#ss][#gg]共用，设置保留的历史记录条数，仅保留最近的N条记录；可用指令：#sf结束对话 #sf结束全部对话",
+          bottomHelpMessage: "使用 OpenAI API 与 Gemini 默认指令 [#ss][#gg] 时，设置保留的历史记录条数，仅保留最近的N条记录；可用指令：#sf结束对话 #sf结束全部对话",
           component: "InputNumber",
           componentProps: {
             min: 1,
@@ -1509,18 +1509,7 @@ export function supportGuoba() {
           field: "gg_HistoryExTime",
           label: "历史记录过期时间",
           helpMessage: '单位：小时',
-          bottomHelpMessage: "[#ss][#gg]共用，设置保留的历史记录的过期时间；可用指令：#sf结束对话 #sf结束全部对话",
-          component: "InputNumber",
-          componentProps: {
-            min: 1,
-            step: 1,
-          },
-        },
-        {
-          field: "mediaMaxSizeInMB",
-          label: "媒体识别最大体积",
-          helpMessage: '单位：MB',
-          bottomHelpMessage: "[#gg]图片/视频内容识别时最大体积，目前仅支持 Gemini",
+          bottomHelpMessage: "全局/所有接口 设置保留的历史记录的过期时间；可用指令：#sf结束对话 #sf结束全部对话",
           component: "InputNumber",
           componentProps: {
             min: 1,
@@ -1530,8 +1519,19 @@ export function supportGuoba() {
         {
           field: "groupMultiChat",
           label: "群聊多人对话",
-          bottomHelpMessage: "开启后群聊中的用户可以在同一话题中与AI聊天，每个群聊都有独立的对话上下文；需要开启“上下文功能”",
+          bottomHelpMessage: "全局/所有接口 开启后群聊中的用户可以在同一话题中与AI聊天，每个群聊都有独立的对话上下文；需要开启“上下文功能”",
           component: "Switch",
+        },
+        {
+          field: "mediaMaxSizeInMB",
+          label: "媒体识别最大体积",
+          helpMessage: '单位：MB',
+          bottomHelpMessage: "Gemini接口 图片/视频内容识别时最大体积，目前仅支持 Gemini",
+          component: "InputNumber",
+          componentProps: {
+            min: 1,
+            step: 1,
+          },
         },
         {
           label: '暖群功能',

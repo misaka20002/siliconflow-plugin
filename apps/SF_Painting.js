@@ -140,12 +140,10 @@ export class SF_Painting extends plugin {
                 {
                     reg: '^#(s|S)(?!f|F|s|S)(.+)',
                     fnc: 'sf_select_and_chat',
-                    log: false
                 },
                 {
                     reg: '^#(g|G)(?!g|G)(.+)',
                     fnc: 'gg_select_and_chat',
-                    log: false
                 },
                 {
                     /** At模式 */
