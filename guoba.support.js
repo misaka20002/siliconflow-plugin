@@ -1017,7 +1017,7 @@ export function supportGuoba() {
         {
           field: 'ss_usingAPI',
           label: '[#ss]主人使用接口',
-          bottomHelpMessage: "选择主人/BOT名称触发时要使用的接口配置；其他用户可使用指令：#sfss接口列表 #sfss使用接口[数字]",
+          bottomHelpMessage: "选择 [#ss]指令/主人/BOT名称触发时要使用的接口配置；其他用户可使用指令：#sfss接口列表 #sfss使用接口[数字]",
           component: 'Select',
           componentProps: {
             options: (Config.getConfig()?.ss_APIList || []).map((item, index) => {
@@ -1025,119 +1025,119 @@ export function supportGuoba() {
             }).concat([{ label: "使用默认配置", value: 0 }])
           },
         },
-        {
-          field: "ss_apiBaseUrl",
-          label: "[#ss]对话接口地址",
-          bottomHelpMessage: "设置#ss[对话] 的对话API接口地址，兼容所有OpenAI格式的API接口，默认无连续对话功能，如有需要可以打开下面的上下文开关，若不填则使用SF接口",
-          component: "Input",
-          componentProps: {
-            placeholder: 'https://api.siliconflow.cn/v1',
-          },
-        },
-        {
-          field: "ss_Key",
-          label: "[#ss]对话API Key",
-          bottomHelpMessage: "设置#ss 对话的API接口的Key，多个密钥使用英文逗号分割，自动轮询。",
-          component: 'InputPassword'
-        },
-        {
-          field: "ss_model",
-          label: "[#ss]对话API模型",
-          bottomHelpMessage: "设置#ss 对话的API接口模型",
-          component: "Input",
-          componentProps: {
-            placeholder: 'gpt-4',
-          },
-        },
-        {
-          field: "ss_Prompt",
-          label: "[#ss]对话API提示词",
-          bottomHelpMessage: "设置#ss 对话的API接口的提示词/人格/扮演的角色，自动将提示词中的字符串 {{user_name}} 替换为用户昵称/群昵称",
-          component: "InputTextArea",
-          componentProps: {
-            placeholder: 'You are a helpful assistant, you prefer to speak Chinese',
-          },
-        },
-        {
-          field: 'ss_groupContextLength',
-          label: '[#ss]读取群聊天记录数',
-          bottomHelpMessage: '允许机器人读取近期的最多群聊聊天记录条数（实际可获取条数取决于适配器）',
-          component: 'InputNumber',
-          componentProps: {
-            min: 0,
-            step: 1,
-          },
-        },
-        {
-          field: "ss_useMarkdown",
-          label: "[#ss]图片对话模式",
-          bottomHelpMessage: "开启后将以图片形式显示对话内容，支持markdown格式",
-          component: "Switch",
-        },
-        {
-          field: "ss_forwardMessage",
-          label: "[#ss]发送合并消息",
-          bottomHelpMessage: "开启后在图片对话模式下会同时转发原始消息",
-          component: "Switch",
-        },
-        {
-          field: "ss_quoteMessage",
-          label: "[#ss]引用原消息",
-          bottomHelpMessage: "是否引用原消息",
-          component: "Switch",
-        },
-        {
-          field: "ss_enableImageUpload",
-          label: "[#ss]图片上传功能",
-          bottomHelpMessage: "开启后支持上传图片给模型，关闭后将忽略消息中的图片",
-          component: "Switch",
-        },
-        {
-          field: "ss_mustNeedImgLength",
-          label: "[#ss]必需图片",
-          bottomHelpMessage: "填写该接口必须使用的图片张数，若用户使用该接口时必须附带/引用图片的图片不足，则要求用户发送图片，常用于图生图/图片鉴赏/ControlNet",
-          helpMessage: '单位：张',
-          component: "InputNumber",
-          componentProps: {
-            min: 0,
-            step: 1,
-          },
-        },
-        {
-          field: "ss_defaultImages",
-          label: "[#ss]默认图片",
-          bottomHelpMessage: "设置必需图片的默认本地图片路径，当需要图片时会自动读取这些本地图片与用户发送的图片合并，无需每次手动发送固定参考图（仅在必需图片数>0时生效）。Windows示例：D:\\xiazai\\image.jpg ；Linux示例：/home/user/images/ref.jpg ；支持带空格/引号的路径",
-          component: "GTags",
-          componentProps: {
-            placeholder: '请输入本地图片绝对路径',
-            allowAdd: true,
-            allowDel: true,
-            valueParser: ((value) => value.split(',').map(v => v.trim()).filter(v => v) || []),
-          },
-        },
-        {
-          field: "ss_mustReturnImgRetriesTimes",
-          label: "必须返回图片",
-          bottomHelpMessage: "[#ss]重试次数：该接口必须返回图片，若没有返回图片，则执行重试的次数。",
-          helpMessage: '单位：重试次数',
-          component: "InputNumber",
-          componentProps: {
-            min: 0,
-            step: 1,
-          },
-        },
-        {
-          field: "ss_forwardThinking",
-          label: "[#ss]转发思考",
-          bottomHelpMessage: "是否转发思考过程",
-          component: "Switch",
-        },
-        {
-          field: "ss_isOnlyMaster",
-          label: "[#ss]仅限主人使用",
-          bottomHelpMessage: "开启后默认配置仅限主人使用",
-          component: "Switch",
-        },
+        // {
+        //   field: "ss_apiBaseUrl",
+        //   label: "[#ss]对话接口地址",
+        //   bottomHelpMessage: "设置#ss[对话] 的对话API接口地址，兼容所有OpenAI格式的API接口，默认无连续对话功能，如有需要可以打开下面的上下文开关，若不填则使用SF接口",
+        //   component: "Input",
+        //   componentProps: {
+        //     placeholder: 'https://api.siliconflow.cn/v1',
+        //   },
+        // },
+        // {
+        //   field: "ss_Key",
+        //   label: "[#ss]对话API Key",
+        //   bottomHelpMessage: "设置#ss 对话的API接口的Key，多个密钥使用英文逗号分割，自动轮询。",
+        //   component: 'InputPassword'
+        // },
+        // {
+        //   field: "ss_model",
+        //   label: "[#ss]对话API模型",
+        //   bottomHelpMessage: "设置#ss 对话的API接口模型",
+        //   component: "Input",
+        //   componentProps: {
+        //     placeholder: 'gpt-4',
+        //   },
+        // },
+        // {
+        //   field: "ss_Prompt",
+        //   label: "[#ss]对话API提示词",
+        //   bottomHelpMessage: "设置#ss 对话的API接口的提示词/人格/扮演的角色，自动将提示词中的字符串 {{user_name}} 替换为用户昵称/群昵称",
+        //   component: "InputTextArea",
+        //   componentProps: {
+        //     placeholder: 'You are a helpful assistant, you prefer to speak Chinese',
+        //   },
+        // },
+        // {
+        //   field: 'ss_groupContextLength',
+        //   label: '[#ss]读取群聊天记录数',
+        //   bottomHelpMessage: '允许机器人读取近期的最多群聊聊天记录条数（实际可获取条数取决于适配器）',
+        //   component: 'InputNumber',
+        //   componentProps: {
+        //     min: 0,
+        //     step: 1,
+        //   },
+        // },
+        // {
+        //   field: "ss_useMarkdown",
+        //   label: "[#ss]图片对话模式",
+        //   bottomHelpMessage: "开启后将以图片形式显示对话内容，支持markdown格式",
+        //   component: "Switch",
+        // },
+        // {
+        //   field: "ss_forwardMessage",
+        //   label: "[#ss]发送合并消息",
+        //   bottomHelpMessage: "开启后在图片对话模式下会同时转发原始消息",
+        //   component: "Switch",
+        // },
+        // {
+        //   field: "ss_quoteMessage",
+        //   label: "[#ss]引用原消息",
+        //   bottomHelpMessage: "是否引用原消息",
+        //   component: "Switch",
+        // },
+        // {
+        //   field: "ss_enableImageUpload",
+        //   label: "[#ss]图片上传功能",
+        //   bottomHelpMessage: "开启后支持上传图片给模型，关闭后将忽略消息中的图片",
+        //   component: "Switch",
+        // },
+        // {
+        //   field: "ss_mustNeedImgLength",
+        //   label: "[#ss]必需图片",
+        //   bottomHelpMessage: "填写该接口必须使用的图片张数，若用户使用该接口时必须附带/引用图片的图片不足，则要求用户发送图片，常用于图生图/图片鉴赏/ControlNet",
+        //   helpMessage: '单位：张',
+        //   component: "InputNumber",
+        //   componentProps: {
+        //     min: 0,
+        //     step: 1,
+        //   },
+        // },
+        // {
+        //   field: "ss_defaultImages",
+        //   label: "[#ss]默认图片",
+        //   bottomHelpMessage: "设置必需图片的默认本地图片路径，当需要图片时会自动读取这些本地图片与用户发送的图片合并，无需每次手动发送固定参考图（仅在必需图片数>0时生效）。Windows示例：D:\\xiazai\\image.jpg ；Linux示例：/home/user/images/ref.jpg ；支持带空格/引号的路径",
+        //   component: "GTags",
+        //   componentProps: {
+        //     placeholder: '请输入本地图片绝对路径',
+        //     allowAdd: true,
+        //     allowDel: true,
+        //     valueParser: ((value) => value.split(',').map(v => v.trim()).filter(v => v) || []),
+        //   },
+        // },
+        // {
+        //   field: "ss_mustReturnImgRetriesTimes",
+        //   label: "必须返回图片",
+        //   bottomHelpMessage: "[#ss]重试次数：该接口必须返回图片，若没有返回图片，则执行重试的次数。",
+        //   helpMessage: '单位：重试次数',
+        //   component: "InputNumber",
+        //   componentProps: {
+        //     min: 0,
+        //     step: 1,
+        //   },
+        // },
+        // {
+        //   field: "ss_forwardThinking",
+        //   label: "[#ss]转发思考",
+        //   bottomHelpMessage: "是否转发思考过程",
+        //   component: "Switch",
+        // },
+        // {
+        //   field: "ss_isOnlyMaster",
+        //   label: "[#ss]仅限主人使用",
+        //   bottomHelpMessage: "开启后默认配置仅限主人使用",
+        //   component: "Switch",
+        // },
         {
           component: "Divider",
           label: " 模型提供商-Gemini [#gg]指令",
@@ -1354,7 +1354,7 @@ export function supportGuoba() {
         {
           field: 'gg_usingAPI',
           label: '[#gg]主人使用接口',
-          bottomHelpMessage: "选择主人/BOT名称触发时要使用的接口配置；其他用户可使用指令：#sfgg接口列表 #sfgg使用接口[数字]",
+          bottomHelpMessage: "选择 [#gg]指令/主人/BOT名称触发时要使用的接口配置；其他用户可使用指令：#sfgg接口列表 #sfgg使用接口[数字]",
           component: 'Select',
           componentProps: {
             options: (Config.getConfig()?.gg_APIList || []).map((item, index) => {
@@ -1362,125 +1362,125 @@ export function supportGuoba() {
             }).concat([{ label: "使用默认配置", value: 0 }])
           },
         },
-        {
-          field: "ggBaseUrl",
-          label: "[#gg]Gemini反代地址",
-          bottomHelpMessage: "设置#gg[对话] 的API接口地址，对https://generativelanguage.googleapis.com 反代；留空则使用内置地址，内置反代不可用时可选用： https://a.geminiproxy.ggff.net",
-          component: "Input",
-          componentProps: {
-            placeholder: 'https://a.geminiproxy.ggff.net',
-          },
-        },
-        {
-          field: "ggKey",
-          label: "[#gg]Gemini API Key",
-          bottomHelpMessage: "设置#gg 对话的API接口的Key，Key可以在https://aistudio.google.com/app/apikey获取；留空则使用内置Key，多个密钥使用英文逗号分割，自动轮询。",
-          component: 'InputPassword',
-        },
-        {
-          field: 'gg_model',
-          label: '[#gg]gemini模型',
-          bottomHelpMessage: '默认值：gemini-2.0-flash；推荐：gemini-exp-1206,gemini-2.0-flash-thinking-exp-01-21；可用模型每日自动更新，立即更新指令：#sf插件立即执行每日自动任务',
-          component: 'Select',
-          componentProps: {
-            options: geminiModelsByFetch.map(s => { return { label: s, value: s } })
-          }
-        },
-        {
-          field: "gg_Prompt",
-          label: "[#gg]对话API提示词",
-          bottomHelpMessage: "设置#gg 对话的API接口的系统提示词，自动将提示词中的字符串 {{user_name}} 替换为用户昵称/群昵称",
-          component: "InputTextArea",
-          componentProps: {
-            placeholder: '你是一个有用的助手，你更喜欢说中文。你会根据用户的问题，通过搜索引擎获取最新的信息来回答问题。你的回答会尽可能准确、客观。',
-          },
-        },
-        {
-          field: 'gg_groupContextLength',
-          label: '[#gg]读取群聊天记录数',
-          bottomHelpMessage: '允许机器人读取近期的最多群聊聊天记录条数（实际可获取条数取决于适配器）',
-          component: 'InputNumber',
-          componentProps: {
-            min: 0,
-            step: 1,
-          },
-        },
-        {
-          field: "gg_useMarkdown",
-          label: "[#gg]图片对话模式",
-          bottomHelpMessage: "开启后将以图片形式显示对话内容，支持markdown格式",
-          component: "Switch",
-        },
-        {
-          field: "gg_forwardMessage",
-          label: "[#gg]发送合并消息",
-          bottomHelpMessage: "开启后在图片对话模式下会同时转发原始消息",
-          component: "Switch",
-        },
-        {
-          field: "gg_quoteMessage",
-          label: "[#gg]引用原消息",
-          bottomHelpMessage: "开启后回复时会引用原消息",
-          component: "Switch",
-        },
-        {
-          field: "gg_useSearch",
-          label: "[#gg]搜索功能",
-          bottomHelpMessage: "开启后Gemini将使用搜索引擎获取最新信息来回答问题，仅限gemini-2.0-flash-exp模型及后续支持该功能的模型",
-          component: "Switch",
-        },
-        {
-          field: "gg_useVertexAI",
-          label: "[#gg]使用Vertex AI格式",
-          bottomHelpMessage: "开启后将使用Google Vertex AI的请求格式（在Google Cloud Vertex AI平台上调用Gemini API的请求和响应格式），不知道是什么的话就关闭",
-          component: "Switch",
-        },
-        {
-          field: "gg_mustNeedImgLength",
-          label: "[#gg]必需图片",
-          bottomHelpMessage: "填写该接口必须使用的图片张数，若用户使用该接口时必须附带/引用图片的图片不足，则要求用户发送图片，常用于图生图/图片鉴赏/ControlNet",
-          helpMessage: '单位：张',
-          component: "InputNumber",
-          componentProps: {
-            min: 0,
-            step: 1,
-          },
-        },
-        {
-          field: "gg_defaultImages",
-          label: "[#gg]默认图片",
-          bottomHelpMessage: "设置必需图片的默认本地图片路径，当需要图片时会自动读取这些本地图片与用户发送的图片合并，无需每次手动发送固定参考图（仅在必需图片数>0时生效）。Windows示例：D:\\xiazai\\image.jpg ；Linux示例：/home/user/images/ref.jpg ；支持带空格/引号的路径",
-          component: "GTags",
-          componentProps: {
-            placeholder: '请输入本地图片绝对路径',
-            allowAdd: true,
-            allowDel: true,
-            valueParser: ((value) => value.split(',').map(v => v.trim()).filter(v => v) || []),
-          },
-        },
-        {
-          field: "gg_enableImageGeneration",
-          label: "[#gg]文生图功能",
-          bottomHelpMessage: "开启后Gemini将支持文生图功能，可以生成图片，仅限gemini-2.0-flash-exp模型及后续支持该功能的模型",
-          component: "Switch",
-        },
-        {
-          field: "gg_mustReturnImgRetriesTimes",
-          label: "[#gg]必须返回图片",
-          bottomHelpMessage: "重试次数：该接口必须返回图片，若没有返回图片，则执行重试的次数。",
-          helpMessage: '单位：重试次数',
-          component: "InputNumber",
-          componentProps: {
-            min: 0,
-            step: 1,
-          },
-        },
-        {
-          field: "gg_isOnlyMaster",
-          label: "[#gg]仅限主人使用",
-          bottomHelpMessage: "开启后默认配置仅限主人使用",
-          component: "Switch",
-        },
+        // {
+        //   field: "ggBaseUrl",
+        //   label: "[#gg]Gemini反代地址",
+        //   bottomHelpMessage: "设置#gg[对话] 的API接口地址，对https://generativelanguage.googleapis.com 反代；留空则使用内置地址，内置反代不可用时可选用： https://a.geminiproxy.ggff.net",
+        //   component: "Input",
+        //   componentProps: {
+        //     placeholder: 'https://a.geminiproxy.ggff.net',
+        //   },
+        // },
+        // {
+        //   field: "ggKey",
+        //   label: "[#gg]Gemini API Key",
+        //   bottomHelpMessage: "设置#gg 对话的API接口的Key，Key可以在https://aistudio.google.com/app/apikey获取；留空则使用内置Key，多个密钥使用英文逗号分割，自动轮询。",
+        //   component: 'InputPassword',
+        // },
+        // {
+        //   field: 'gg_model',
+        //   label: '[#gg]gemini模型',
+        //   bottomHelpMessage: '默认值：gemini-2.0-flash；推荐：gemini-exp-1206,gemini-2.0-flash-thinking-exp-01-21；可用模型每日自动更新，立即更新指令：#sf插件立即执行每日自动任务',
+        //   component: 'Select',
+        //   componentProps: {
+        //     options: geminiModelsByFetch.map(s => { return { label: s, value: s } })
+        //   }
+        // },
+        // {
+        //   field: "gg_Prompt",
+        //   label: "[#gg]对话API提示词",
+        //   bottomHelpMessage: "设置#gg 对话的API接口的系统提示词，自动将提示词中的字符串 {{user_name}} 替换为用户昵称/群昵称",
+        //   component: "InputTextArea",
+        //   componentProps: {
+        //     placeholder: '你是一个有用的助手，你更喜欢说中文。你会根据用户的问题，通过搜索引擎获取最新的信息来回答问题。你的回答会尽可能准确、客观。',
+        //   },
+        // },
+        // {
+        //   field: 'gg_groupContextLength',
+        //   label: '[#gg]读取群聊天记录数',
+        //   bottomHelpMessage: '允许机器人读取近期的最多群聊聊天记录条数（实际可获取条数取决于适配器）',
+        //   component: 'InputNumber',
+        //   componentProps: {
+        //     min: 0,
+        //     step: 1,
+        //   },
+        // },
+        // {
+        //   field: "gg_useMarkdown",
+        //   label: "[#gg]图片对话模式",
+        //   bottomHelpMessage: "开启后将以图片形式显示对话内容，支持markdown格式",
+        //   component: "Switch",
+        // },
+        // {
+        //   field: "gg_forwardMessage",
+        //   label: "[#gg]发送合并消息",
+        //   bottomHelpMessage: "开启后在图片对话模式下会同时转发原始消息",
+        //   component: "Switch",
+        // },
+        // {
+        //   field: "gg_quoteMessage",
+        //   label: "[#gg]引用原消息",
+        //   bottomHelpMessage: "开启后回复时会引用原消息",
+        //   component: "Switch",
+        // },
+        // {
+        //   field: "gg_useSearch",
+        //   label: "[#gg]搜索功能",
+        //   bottomHelpMessage: "开启后Gemini将使用搜索引擎获取最新信息来回答问题，仅限gemini-2.0-flash-exp模型及后续支持该功能的模型",
+        //   component: "Switch",
+        // },
+        // {
+        //   field: "gg_useVertexAI",
+        //   label: "[#gg]使用Vertex AI格式",
+        //   bottomHelpMessage: "开启后将使用Google Vertex AI的请求格式（在Google Cloud Vertex AI平台上调用Gemini API的请求和响应格式），不知道是什么的话就关闭",
+        //   component: "Switch",
+        // },
+        // {
+        //   field: "gg_mustNeedImgLength",
+        //   label: "[#gg]必需图片",
+        //   bottomHelpMessage: "填写该接口必须使用的图片张数，若用户使用该接口时必须附带/引用图片的图片不足，则要求用户发送图片，常用于图生图/图片鉴赏/ControlNet",
+        //   helpMessage: '单位：张',
+        //   component: "InputNumber",
+        //   componentProps: {
+        //     min: 0,
+        //     step: 1,
+        //   },
+        // },
+        // {
+        //   field: "gg_defaultImages",
+        //   label: "[#gg]默认图片",
+        //   bottomHelpMessage: "设置必需图片的默认本地图片路径，当需要图片时会自动读取这些本地图片与用户发送的图片合并，无需每次手动发送固定参考图（仅在必需图片数>0时生效）。Windows示例：D:\\xiazai\\image.jpg ；Linux示例：/home/user/images/ref.jpg ；支持带空格/引号的路径",
+        //   component: "GTags",
+        //   componentProps: {
+        //     placeholder: '请输入本地图片绝对路径',
+        //     allowAdd: true,
+        //     allowDel: true,
+        //     valueParser: ((value) => value.split(',').map(v => v.trim()).filter(v => v) || []),
+        //   },
+        // },
+        // {
+        //   field: "gg_enableImageGeneration",
+        //   label: "[#gg]文生图功能",
+        //   bottomHelpMessage: "开启后Gemini将支持文生图功能，可以生成图片，仅限gemini-2.0-flash-exp模型及后续支持该功能的模型",
+        //   component: "Switch",
+        // },
+        // {
+        //   field: "gg_mustReturnImgRetriesTimes",
+        //   label: "[#gg]必须返回图片",
+        //   bottomHelpMessage: "重试次数：该接口必须返回图片，若没有返回图片，则执行重试的次数。",
+        //   helpMessage: '单位：重试次数',
+        //   component: "InputNumber",
+        //   componentProps: {
+        //     min: 0,
+        //     step: 1,
+        //   },
+        // },
+        // {
+        //   field: "gg_isOnlyMaster",
+        //   label: "[#gg]仅限主人使用",
+        //   bottomHelpMessage: "开启后默认配置仅限主人使用",
+        //   component: "Switch",
+        // },
         {
           component: "Divider",
           label: "对话全局设置",
