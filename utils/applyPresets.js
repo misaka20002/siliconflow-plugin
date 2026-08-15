@@ -13,6 +13,7 @@ import {
  *   - processedText: 处理后的文本(预设名替换为预设文本)
  *   - usedPresets: 使用过的预设数组 [{name, prompt}]
  *   - originalText: 处理后的文本(预设名替换为占位符： {sf预设: ${presetName}} )
+ *   - images: 命中的预设所配置的图片链接数组（已合并去重，保留预设顺序）
  *   - blocked: 是否因「仅主人可用」被拦截（非主人误触发）
  *   - blockedPresets: 被拦截的预设名数组
  */
@@ -22,6 +23,7 @@ export async function applyPresets(text, config, e = {}) {
         processedText: text || '',
         usedPresets: [],
         originalText: originalTextInput,
+        images: [],
         blocked: false,
         blockedPresets: []
     }
@@ -35,6 +37,7 @@ export async function applyPresets(text, config, e = {}) {
             processedText: text,
             usedPresets: [],
             originalText: originalTextInput,
+            images: [],
             blocked: false,
             blockedPresets: []
         }
@@ -55,6 +58,7 @@ export async function applyPresets(text, config, e = {}) {
                 name: nameTrimmed,
                 prompt: p.prompt.trim(),
                 isOnlyMaster: !!p.isOnlyMaster,
+                images: normalizeImages(p.images),
                 regex: new RegExp(regexStr, 'gi')
             };
         })
@@ -116,6 +120,7 @@ export async function applyPresets(text, config, e = {}) {
                 processedText: text,
                 usedPresets: [],
                 originalText: originalTextInput,
+                images: [],
                 blocked: true,
                 blockedPresets: blockedNames
             }
@@ -129,6 +134,8 @@ export async function applyPresets(text, config, e = {}) {
     let originalText = text
     const usedPresets = []
     const usedPresetNames = new Set()
+    const images = []
+    const imageSet = new Set()
 
     for (const match of validMatches) {
         const { start, end, preset } = match
@@ -140,6 +147,15 @@ export async function applyPresets(text, config, e = {}) {
                 name: preset.name,
                 prompt: preset.prompt
             })
+        }
+
+        // 收集该预设配置的图片（合并去重，保留预设顺序）
+        if (Array.isArray(preset.images)) {
+            for (const img of preset.images) {
+                if (!img || imageSet.has(img)) continue
+                imageSet.add(img)
+                images.push(img)
+            }
         }
 
         // 替换 processedText
@@ -156,6 +172,7 @@ export async function applyPresets(text, config, e = {}) {
         processedText: processedText.trim(),
         usedPresets,
         originalText,
+        images,
         blocked: false,
         blockedPresets: []
     }
@@ -168,6 +185,53 @@ export async function applyPresets(text, config, e = {}) {
  */
 function escapeRegExp(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
+/**
+ * 规范化预设图片字段：支持字符串（逗号/换行分隔）与数组两种形式，
+ * 统一返回去空白、去空的字符串数组。
+ * @param {*} images 预设的图片配置
+ * @returns {string[]}
+ */
+function normalizeImages(images) {
+    if (!images) return []
+    let list = images
+    if (typeof images === 'string') {
+        list = images.split(/[,\n，]/)
+    }
+    if (!Array.isArray(list)) return []
+    return list
+        .map(v => (typeof v === 'string' ? v.trim() : ''))
+        .filter(v => v)
+}
+
+/**
+ * 将预设命中返回的图片链接合并进 e.img，供下游图生图流程统一下载/转码。
+ * 支持 http(s)://、base64://、data:、file:// 及本地绝对路径（由 url2Base64 统一处理）。
+ * 合并后统一受 maxCollectedImages 截断。
+ * @param {object} e 消息事件对象，图片收集后 e.img 为数组
+ * @param {string[]} images 预设图片链接数组
+ * @param {number} maxCollectedImages 最大收集图片数
+ * @returns {void}
+ */
+export function mergePresetImages(e, images, maxCollectedImages) {
+    if (!Array.isArray(images) || images.length === 0) return
+    const limit = Number.isFinite(Number(maxCollectedImages))
+        ? Math.max(1, Math.floor(Number(maxCollectedImages)))
+        : Infinity
+
+    if (!e.img) {
+        e.img = []
+    } else if (!Array.isArray(e.img)) {
+        e.img = [e.img]
+    }
+
+    for (const img of images) {
+        if (e.img.length >= limit) break
+        if (typeof img !== 'string' || !img) continue
+        if (e.img.includes(img)) continue
+        e.img.push(img)
+    }
 }
 
 /**

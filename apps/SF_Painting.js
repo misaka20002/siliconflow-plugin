@@ -31,7 +31,7 @@ import { memberControlProcess } from '../utils/memberControl.js'
 import {
     buildChatHistoryPrompt,
 } from '../utils/onebotUtils.js'
-import { applyPresets } from '../utils/applyPresets.js'
+import { applyPresets, mergePresetImages } from '../utils/applyPresets.js'
 import {
     hidePrivacyInfo,
     removeCQCode,
@@ -1112,6 +1112,7 @@ export class SF_Painting extends plugin {
         let msg = e.msg.replace(/^#(ss|SS)/, '').trim()
         /** 发送给AI的信息 */
         let toAiMessage = msg;
+        let presetImages = [];
 
         // 处理预设
         if (paintModel) {
@@ -1119,6 +1120,7 @@ export class SF_Painting extends plugin {
             if (presetResult.blocked) return true
             toAiMessage = presetResult.processedText
             msg = presetResult.originalText
+            presetImages = presetResult.images || []
             // 处理 msg
             let param = await handleParam(e, toAiMessage)
             if (param.parameters.upimgs) {
@@ -1163,6 +1165,8 @@ export class SF_Painting extends plugin {
             if (!(await getMediaFrom_awaitContext(e, this, mustNeedImgLength, memberConfigName, false, maxCollectedImages)))
                 return true;
         }
+        // 合并预设图片（图生图底图/参考图）
+        mergePresetImages(e, presetImages, maxCollectedImages)
         if (Array.isArray(e.img)) e.img = e.img.slice(0, maxCollectedImages)
         let currentImages = [];
         if (e.img && e.img.length > 0 && enableImageUpload) {
@@ -1913,6 +1917,7 @@ ${e.sfRuntime.isgeneratePrompt === undefined ? "Tags中可用：--自动提示�
         let msg = e.msg.replace(/^#(gg|GG)/, '').trim()
         /** 发送给AI的信息 */
         let toAiMessage = msg;
+        let presetImages = [];
 
         // 处理预设
         if (paintModel) {
@@ -1920,6 +1925,7 @@ ${e.sfRuntime.isgeneratePrompt === undefined ? "Tags中可用：--自动提示�
             if (presetResult.blocked) return true
             toAiMessage = presetResult.processedText
             msg = presetResult.originalText
+            presetImages = presetResult.images || []
             // 处理 msg
             let param = await handleParam(e, toAiMessage)
             if (param.parameters.upimgs) {
@@ -1964,6 +1970,8 @@ ${e.sfRuntime.isgeneratePrompt === undefined ? "Tags中可用：--自动提示�
             if (!(await getMediaFrom_awaitContext(e, this, mustNeedImgLength, memberConfigName, false, maxCollectedImages)))
                 return true;
         }
+        // 合并预设图片（图生图底图/参考图）
+        mergePresetImages(e, presetImages, maxCollectedImages)
         if (Array.isArray(e.img)) e.img = e.img.slice(0, maxCollectedImages)
 
         let currentImages = []; // 兼容旧版，仅保存纯 base64 (用于生成 Markdown 图片等)

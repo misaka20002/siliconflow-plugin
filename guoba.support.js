@@ -760,6 +760,18 @@ export function supportGuoba() {
                 bottomHelpMessage: "1.支持的固定参数: 横图, 竖图, 方图, --1:1, --16:9, --9:16, --upimgs 2, reference_strength = 0.8, 1024*1024 等；2.meme制作：支持将预设文本中的 _sender_name_ 替换为当前用户昵称；_at1_name_、_at2_name_、_at3_name_ ... 按 At 顺序替换为被 At 用户的昵称，对应用户不存在时替换为空字符串； _sender_id_ 替换为当前用户qq； _sender_groupid_ 替换为 当前群号； _date_ 替换为 当前日期； _time_ 替换为 当前时间；",
               },
               {
+                field: "images",
+                label: "预设图片",
+                component: "GTags",
+                bottomHelpMessage: "可选；设置此预设的参考图/底图链接数组，命中预设时自动作为图生图的参考图传入。支持 http(s) 链接、base64://、data:、file:// 或本地绝对路径。可用于 meme 表情包制作：把固定的 meme 模板图填在这里，再在预设文本里写模板文案（配合 _sender_name_ 等占位符），触发 #d/#s/#g 绘画时即生成表情包。注意：#d 需在接口开启「支持图生图」，#s/#g 需开启「仅绘画模式」并配置必需图片。\n本地路径写法：Linux 示例 /root/Downloads/image.jpg；Windows 请用正斜杠示例 D:/Downloads/image.jpg（或 file:///D:/Downloads/image.jpg）",
+                componentProps: {
+                  placeholder: '请输入图片链接，如 https://example.com/meme.png',
+                  allowAdd: true,
+                  allowDel: true,
+                  valueParser: ((value) => value.split(/[,\n]/).map(v => v.trim()).filter(v => v) || []),
+                },
+              },
+              {
                 field: "isOnlyMaster",
                 label: "仅主人可用",
                 component: "Switch",

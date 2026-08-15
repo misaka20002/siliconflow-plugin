@@ -10,7 +10,7 @@ import {
     url2Base64,
     getMediaFrom_awaitContext,
 } from '../utils/getImg.js'
-import { applyPresets } from '../utils/applyPresets.js'
+import { applyPresets, mergePresetImages } from '../utils/applyPresets.js'
 
 export class DD_Painting extends plugin {
     constructor() {
@@ -675,6 +675,9 @@ export class DD_Painting extends plugin {
             if (!(await getMediaFrom_awaitContext(e, this, upimgs_num, "upimgs", false, maxCollectedImages)))
                 return true;
         }
+        // 合并预设图片（图生图底图/参考图）
+        mergePresetImages(e, presetResult.images, maxCollectedImages)
+
         if (Array.isArray(e.img)) e.img = e.img.slice(0, maxCollectedImages)
 
         let source_images = [];
